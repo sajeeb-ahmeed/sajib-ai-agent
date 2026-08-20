@@ -15,9 +15,12 @@ export interface AgentRequestMessage {
 export interface AgentChatRequest {
   message: string;
   history: AgentRequestMessage[];
+  website: string;
 }
 
 export interface AgentChatResponse {
   reply: string;
   provider?: "groq" | "gemini" | string;
+  model?: string;
+  mode?: string;
 }
