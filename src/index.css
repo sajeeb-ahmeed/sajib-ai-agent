@@ -8,11 +8,29 @@
     "Segoe UI",
     sans-serif;
 
-  color: #f8fafc;
-  background: #05070a;
+  color: #f7f9fc;
+  background: #050608;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+
+  --bg: #050608;
+  --surface: rgba(12, 15, 20, 0.74);
+  --surface-strong: rgba(14, 18, 24, 0.92);
+
+  --text: #f7f9fc;
+  --muted: #8f99aa;
+  --faint: #596170;
+
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.14);
+
+  --cyan: #73e8ff;
+  --violet: #9c8cff;
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
 }
 
 * {
@@ -20,17 +38,28 @@
 }
 
 html {
-  background: #05070a;
+  min-width: 320px;
+  background: var(--bg);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 button,
 input,
 textarea {
   font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+::selection {
+  color: #050608;
+  background: #b6efff;
 }

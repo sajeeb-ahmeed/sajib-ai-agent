@@ -1,12 +1,8 @@
 ﻿import "./App.css";
+import { AgentShell } from "./components/AgentShell";
 
 function App() {
-  return (
-    <main className="app">
-      <h1>SAJIB.AI</h1>
-      <p>Personal Engineering Intelligence</p>
-    </main>
-  );
+  return <AgentShell />;
 }
 
 export default App;
