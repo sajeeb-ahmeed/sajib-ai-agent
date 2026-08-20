@@ -6,3 +6,18 @@ export interface ChatMessage {
   content: string;
   createdAt: number;
 }
+
+export interface AgentRequestMessage {
+  role: MessageRole;
+  content: string;
+}
+
+export interface AgentChatRequest {
+  message: string;
+  history: AgentRequestMessage[];
+}
+
+export interface AgentChatResponse {
+  reply: string;
+  provider?: "groq" | "gemini" | string;
+}
