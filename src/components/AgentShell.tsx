@@ -1,13 +1,58 @@
-﻿import { StatusPill } from "./StatusPill";
+﻿import { useEffect, useRef, useState } from "react";
+import { suggestedPrompts } from "../data/prompts";
+import type { ChatMessage as ChatMessageType } from "../types/chat";
+import { ChatComposer } from "./ChatComposer";
+import { ChatMessage } from "./ChatMessage";
+import { StatusPill } from "./StatusPill";
+import { SuggestedPrompts } from "./SuggestedPrompts";
 
-const capabilities = [
-  "Projects",
-  "Experience",
-  "Engineering",
-  "AI Systems",
+const initialMessages: ChatMessageType[] = [
+  {
+    id: "agent-welcome",
+    role: "assistant",
+    content:
+      "Hi, I'm SAJIB.AI — Sajib Ahmed's portfolio intelligence interface. Ask me about his projects, engineering experience, technical stack, or AI work.",
+    createdAt: Date.now(),
+  },
 ];
 
 export function AgentShell() {
+  const [messages, setMessages] =
+    useState<ChatMessageType[]>(initialMessages);
+
+  const [input, setInput] = useState("");
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, [messages]);
+
+  function submitMessage() {
+    const content = input.trim();
+
+    if (!content) {
+      return;
+    }
+
+    const message: ChatMessageType = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content,
+      createdAt: Date.now(),
+    };
+
+    setMessages((current) => [...current, message]);
+    setInput("");
+  }
+
+  function handleSuggestedPrompt(prompt: string) {
+    setInput(prompt);
+  }
+
   return (
     <main className="agent-page">
       <div className="ambient ambient-one" aria-hidden="true" />
@@ -46,21 +91,18 @@ export function AgentShell() {
             </h2>
 
             <p className="hero-description">
-              An interactive AI interface for exploring Sajib Ahmed&apos;s
-              projects, engineering experience, technical stack, systems,
-              and product work.
+              Explore Sajib Ahmed&apos;s projects, engineering experience,
+              technical decisions, product work, and AI systems through an
+              interactive portfolio agent.
             </p>
 
-            <div className="capability-row" aria-label="Agent capabilities">
-              {capabilities.map((capability) => (
-                <span className="capability-chip" key={capability}>
-                  {capability}
-                </span>
-              ))}
-            </div>
+            <SuggestedPrompts
+              prompts={suggestedPrompts}
+              onSelect={handleSuggestedPrompt}
+            />
           </div>
 
-          <div className="terminal-card">
+          <div className="terminal-card chat-terminal">
             <div className="terminal-topbar">
               <div className="window-controls" aria-hidden="true">
                 <span />
@@ -70,33 +112,37 @@ export function AgentShell() {
 
               <span className="terminal-name">sajib.ai/session</span>
 
-              <span className="terminal-mode">READY</span>
+              <span className="terminal-mode">LOCAL</span>
             </div>
 
-            <div className="terminal-content">
-              <div className="agent-orb" aria-hidden="true">
-                <div className="orb-ring orb-ring-one" />
-                <div className="orb-ring orb-ring-two" />
-                <div className="orb-core" />
-              </div>
-
-              <div className="welcome-copy">
-                <span className="prompt-prefix">&gt;</span>
-
+            <div className="chat-session">
+              <div className="connection-banner">
                 <div>
-                  <p className="welcome-title">Agent initialized.</p>
-                  <p className="welcome-text">
-                    Conversation engine will be connected in the next
-                    development stages.
-                  </p>
+                  <span className="connection-dot" />
+                  <span>LOCAL INTERFACE MODE</span>
                 </div>
+
+                <span>Agent API connection pending</span>
               </div>
 
-              <div className="composer-preview" aria-hidden="true">
-                <span>Ask SAJIB.AI something...</span>
+              <div className="messages">
+                {messages.map((message) => (
+                  <ChatMessage key={message.id} message={message} />
+                ))}
 
-                <div className="send-preview">
-                  <span>↗</span>
+                <div ref={messagesEndRef} />
+              </div>
+
+              <div className="composer-zone">
+                <ChatComposer
+                  value={input}
+                  onChange={setInput}
+                  onSubmit={submitMessage}
+                />
+
+                <div className="composer-help">
+                  <span>ENTER TO SEND</span>
+                  <span>SHIFT + ENTER FOR NEW LINE</span>
                 </div>
               </div>
             </div>
@@ -104,8 +150,8 @@ export function AgentShell() {
             <footer className="terminal-footer">
               <span>React</span>
               <span>TypeScript</span>
-              <span>AI Agent</span>
-              <span>Secure API</span>
+              <span>Conversation UI</span>
+              <span>API Ready</span>
             </footer>
           </div>
         </div>
